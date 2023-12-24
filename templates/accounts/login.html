@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block body_block %}
+{% load crispy_forms_tags %}
+<h3 class="text-center">Login User</h3>
+<form action="{% url 'login_user' %}" method="POST" style="width: 500px; margin: auto;">
+    {% csrf_token %}
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+            <strong>{{ message }}</strong>.
+        </div>
+        {% endfor %}
+        {% endif %}
+    {{form | crispy}}
+    <button type="submit" class="btn btn-warning">Submit</button>
+</form>
+{% endblock %}

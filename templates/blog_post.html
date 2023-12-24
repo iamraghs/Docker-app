@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% block body_block %}
+<!-- Page content-->
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Post content-->
+            <article>
+                <!-- Post header-->
+                <header class="mb-4">
+                    <!-- Post title-->
+                    <h1 class="fw-bolder mb-1">{{post.title}}</h1>
+                    <section class="mb-5">
+                        <p class="fs-5 mb-4">{{post.short_description}}</p>
+                    </section>
+                    <!-- Post meta content-->
+                    <div class="text-muted fst-italic mb-2">Posted on January 1, 2023 by admin</div>
+                    <!-- Post category-->
+                    <a class="badge bg-primary text-decoration-none text-light" href="#!">Web Design</a>
+                </header>
+                <!-- Preview image figure-->
+                <figure class="mb-4"><img class="img-fluid rounded" src="{{post.featured_image.url}}" alt="..." /></figure>
+                <!-- Post content-->
+                <section class="mb-5">
+                    <p class="fs-5 mb-4">{{post.blog_body}}</p>
+                    <!-- code for comments-->
+                    <h4>Comments ({{total_comments}})</h4><br>
+                    {% if comments %}
+                        {% for comment in comments %}
+                        <div class="card">
+                            <div class="card-cody">
+                                <p class="card-text mb-0">{{comment}}</p>
+                                <span>
+                                    <small>By {{comment.commented_by}}</small>
+                                    <small>| {{comment.created_at | timesince}} ago</small>
+                                </span>
+                            </div>
+                        </div><br>
+                        {% endfor %}
+                    {% else %}
+                    <p> No comments yet </p>
+                    {% endif %}
+                    <br>
+                    <div class="form-group">
+                        <form action="{% url 'post_by_slug' post.slug %}" method="POST">
+                            {% if messages %}
+                            {% for message in messages %}
+                            <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                                <strong>{{ message }}</strong>.
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                            {% csrf_token %}
+                            <div class="form-group">
+                            <textarea name="comment" class="form-control" cols="30" rows="5" placeholder="Write your comment"></textarea>
+                            <input type="submit" value="submit" class="btn btn-primary mt-2">
+                            </div>
+                        </form>
+                    </div>
+                    <!-- end comment code -->
+                </section>
+            </article>
+        </div>
+        <!-- Side widgets-->
+        <div class="col-lg-4">
+            <!-- Categories widget-->
+            <div class="card mb-4 p-3">
+                <h4 class="font-italic">Categories</h4>
+                <div class="card-body">
+                    <div class="row">
+                        {% for tag in tags %}
+                        <div class="col-sm-6">
+                            <ul class="list-unstyled mb-0">
+                                <li><a  href="{% url 'post_by_category' tag.id %}">{{tag.name}}</a></li>
+                                
+                            </ul>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <!-- Side widget-->
+            <div class="card mb-4 p-3">
+                <h4 class="font-italic">Follow Us</h4>
+                <ol class="list-unstyled">
+                    {% for social_app in social_apps %}
+                    <li><a href="{{social_app.social_url}}" target="_blank">{{social_app.social_name}}</a></li>
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
